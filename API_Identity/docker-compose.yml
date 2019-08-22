@@ -3,8 +3,8 @@ version: '3.6'
 services:
 
   web:
-    container_name: 'apiIdentity'
-    image: 'apiIdentity'
+    container_name: 'api-identity'
+    image: 'api-identity'
     build:
       context: .
       dockerfile: apiIdentity.development.dockerfile
@@ -15,7 +15,7 @@ services:
     depends_on:
      - "postgres"
     networks:
-      - apiIdentity-network
+      - api-identity-network
 
   postgres:
     container_name: 'postgres'
@@ -23,10 +23,10 @@ services:
     environment:
       POSTGRES_PASSWORD: password
     networks:
-      - apiIdentity-network
+      - api-identity-network
 
 networks:
-  apiIdentity-network:
+  api-identity-network:
     driver: bridge
 
 
