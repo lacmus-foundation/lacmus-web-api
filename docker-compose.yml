@@ -1,0 +1,44 @@
+version: '3.6'
+
+services:
+
+  identity.api:
+    container_name: 'iidentity.api'
+    image: 'identity.api'
+    build:
+      context: ./API_Identity
+      dockerfile: apiIdentity.development.dockerfile
+    volumes:
+      - ./API_Identity:/var/www/apiIdentity
+    depends_on:
+      - "postgres"
+    networks:
+      - api-identity-network
+
+  postgres:
+    container_name: 'postgres'
+    image: postgres
+    environment:
+      POSTGRES_PASSWORD: password
+    networks:
+      - api-identity-network
+  gateway:
+    container_name: 'gateway'
+    image: geatway
+    build:
+      context: ./API_Gateway
+      dockerfile: apiGateway.development.dockerfile
+    volumes:
+      - ./API_Gateway:/var/www/apiGateway
+    ports:
+      - "80:80"
+    depends_on:
+      - "identity.api"
+    networks:
+      - api-identity-network
+
+networks:
+  api-identity-network:
+    driver: bridge
+
+
