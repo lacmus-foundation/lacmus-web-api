@@ -22,6 +22,18 @@ services:
       POSTGRES_PASSWORD: password
     networks:
       - api-identity-network
+  
+  retinanet.api:
+    container_name: 'retinanet.api'
+    image: 'retinanet.api'
+    build:
+      context: ./API_RetinaNet
+      dockerfile: apiRetinaNet.development.dockerfile
+    ports:
+      - "5001:5001"
+    networks:
+      - api-identity-network
+    
   gateway:
     container_name: 'gateway'
     image: geatway

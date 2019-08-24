@@ -53,7 +53,7 @@
       }
     },
     {
-      "DownstreamPathTemplate": "/api/user/",
+      "DownstreamPathTemplate": "/api/user",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -61,8 +61,40 @@
           "Port": 5000
         }
       ],
-      "UpstreamPathTemplate": "/api/v1/user/",
+      "UpstreamPathTemplate": "/api/v1/user",
       "UpstreamHttpMethod": [ "POST", "PUT", "GET", "DELETE" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "JwtBearer",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "retinanet.api",
+          "Port": 5001
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/predict",
+      "UpstreamHttpMethod": [ "GET" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "JwtBearer",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/image",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "retinanet.api",
+          "Port": 5001
+        }
+      ],
+      "UpstreamPathTemplate": "/api/v1/predict/image",
+      "UpstreamHttpMethod": [ "POST" ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "JwtBearer",
         "AllowedScopes": []
