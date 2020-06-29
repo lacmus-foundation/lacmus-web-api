@@ -1,56 +1,39 @@
 version: '3.6'
 
 services:
-
-  Identity.api:
-    container_name: 'iIdentity.api'
-    image: 'Identity.api'
-    build:
-      context: ./Identity
-      dockerfile: apiIdentity.development.dockerfile
-    volumes:
-      - ./Identity:/var/www/apiIdentity
-    depends_on:
-      - "postgres"
-    networks:
-      - api-Identity-network
-
-  postgres:
-    container_name: 'postgres'
-    image: postgres
-    environment:
-      POSTGRES_PASSWORD: password
-    networks:
-      - api-Identity-network
-  
-  retinanet.api:
-    container_name: 'retinanet.api'
-    image: 'retinanet.api'
-    build:
-      context: ./API_RetinaNet
-      dockerfile: apiRetinaNet.development.dockerfile
-    ports:
-      - "5001:5001"
-    networks:
-      - api-Identity-network
-    
   gateway:
-    container_name: 'gateway'
-    image: geatway
     build:
-      context: ./API_Gateway
-      dockerfile: apiGateway.development.dockerfile
+      context: krakend-ce
+      dockerfile: Dockerfile
+    container_name: gateway
     volumes:
-      - ./API_Gateway:/var/www/apiGateway
+      - ./gateway:/etc/krakend
     ports:
-      - "80:80"
-    depends_on:
-      - "Identity.api"
-    networks:
-      - api-Identity-network
+      - 8090:8090
+    command: [ "run", "-c", "/etc/krakend/config.json" ]
 
-networks:
-  api-Identity-network:
-    driver: bridge
+#  identity:
+#    container_name: 'identity'
+#    image: 'Identity'
+#    build:
+#      context: ./Identity
+#      dockerfile: identity.development.dockerfile
+#    volumes:
+#      - ./Identity:/var/www/Identity
+#    depends_on:
+#      - "postgres"
+#    networks:
+#      - identity-network
+
+#  postgres:
+#    container_name: 'postgres'
+#    image: postgres
+#    environment:
+#      POSTGRES_PASSWORD: password
+#    networks:
+      - identity-network
+#networks:
+#  identity-network:
+#    driver: bridge
 
 
