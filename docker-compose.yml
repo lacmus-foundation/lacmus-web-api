@@ -2,18 +2,18 @@ version: '3.6'
 
 services:
 
-  identity.api:
-    container_name: 'iidentity.api'
-    image: 'identity.api'
+  Identity.api:
+    container_name: 'iIdentity.api'
+    image: 'Identity.api'
     build:
-      context: ./API_Identity
+      context: ./Identity
       dockerfile: apiIdentity.development.dockerfile
     volumes:
-      - ./API_Identity:/var/www/apiIdentity
+      - ./Identity:/var/www/apiIdentity
     depends_on:
       - "postgres"
     networks:
-      - api-identity-network
+      - api-Identity-network
 
   postgres:
     container_name: 'postgres'
@@ -21,7 +21,7 @@ services:
     environment:
       POSTGRES_PASSWORD: password
     networks:
-      - api-identity-network
+      - api-Identity-network
   
   retinanet.api:
     container_name: 'retinanet.api'
@@ -32,7 +32,7 @@ services:
     ports:
       - "5001:5001"
     networks:
-      - api-identity-network
+      - api-Identity-network
     
   gateway:
     container_name: 'gateway'
@@ -45,12 +45,12 @@ services:
     ports:
       - "80:80"
     depends_on:
-      - "identity.api"
+      - "Identity.api"
     networks:
-      - api-identity-network
+      - api-Identity-network
 
 networks:
-  api-identity-network:
+  api-Identity-network:
     driver: bridge
 
 
