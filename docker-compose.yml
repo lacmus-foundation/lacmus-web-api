@@ -9,31 +9,23 @@ services:
     volumes:
       - ./gateway:/etc/krakend
     ports:
-      - 8090:8090
+      - 8080:8080
     command: [ "run", "-c", "/etc/krakend/config.json" ]
-
-#  identity:
-#    container_name: 'identity'
-#    image: 'Identity'
-#    build:
-#      context: ./Identity
-#      dockerfile: identity.development.dockerfile
-#    volumes:
-#      - ./Identity:/var/www/Identity
-#    depends_on:
-#      - "postgres"
-#    networks:
-#      - identity-network
-
-#  postgres:
-#    container_name: 'postgres'
-#    image: postgres
-#    environment:
-#      POSTGRES_PASSWORD: password
-#    networks:
-      - identity-network
-#networks:
-#  identity-network:
-#    driver: bridge
-
-
+    depends_on:
+    - identity
+    - static_data
+  static_data:
+    image: jaxgeller/lwan
+    container_name: 'static_data'
+    volumes:
+      - ./static_data:/lwan/wwwroot
+    ports:
+      - "8000:8080"
+  identity:
+    container_name: 'identity'
+    image: 'identity'
+    build:
+      context: ./Identity
+      dockerfile: development.dockerfile
+    ports:
+      - 5000:5000
