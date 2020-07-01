@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
@@ -14,8 +15,8 @@ namespace Identity.ViewModels.Token
         [JsonPropertyName("jti")]
         public string Jti { get; set; }
         [JsonPropertyName("roles")]
-        public IEnumerable<string> Roles { get; set; }
+        public List<string> Roles { get; set; }
         [JsonPropertyName("exp")]
-        public int Exp { get; set; }
+        public UInt64 Exp { get; set; }
     }
 }

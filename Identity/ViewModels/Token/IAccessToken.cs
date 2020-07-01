@@ -4,6 +4,6 @@ namespace Identity.ViewModels.Token
 {
     public interface IAccessToken
     {
-        public IEnumerable<string> Roles { get; set; }
+        public List<string> Roles { get; set; }
     }
 }

@@ -8,5 +8,6 @@ EXPOSE 5000
 
 WORKDIR /var/www/Identity
 COPY . .
+RUN dotnet restore && dotnet build
 
-CMD ["/bin/bash", "-c", "dotnet restore && dotnet watch run"]
+CMD ["/bin/bash", "-c", "dotnet run"]

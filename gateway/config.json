@@ -48,6 +48,26 @@
       }
     },
     {
+			"endpoint": "/api/v1/auth/token-issuer",
+			"method": "PUT",
+			"backend": [
+			  {
+				  "host":[ "http://identity:5000" ],
+				  "url_pattern": "/api/v1/token",
+				  "method": "PUT"
+			  }
+      ],
+      "extra_config": {
+        "github.com/devopsfaith/krakend-jose/signer": {
+            "alg": "HS256",
+            "kid": "sim2",
+            "keys-to-sign": ["access_token"],
+            "jwk-url": "http://static_data:8080/jwk/symmetric.json",
+            "disable_jwk_security": true
+        }
+      }
+    },
+    {
 			"endpoint": "/api/v1/privete/key",
 			"backend": [
 			  {
@@ -60,6 +80,8 @@
           "alg": "HS256",
           "audience": ["https://lacmus.io"],
           "issuer": "https://lacmus",
+          "roles_key": "roles",
+          "roles": ["user", "admin"],
           "jwk-url": "http://static_data:8080/jwk/symmetric.json",
           "disable_jwk_security": true
         }
