@@ -1,7 +1,8 @@
 using System;
 using System.Collections.Generic;
+using Identity.Models.Token;
 using Identity.ViewModels.Token;
-using Identity.ViewModels.UserLogin;
+using Identity.ViewModels.User;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Identity.Controllers
@@ -33,8 +34,9 @@ namespace Identity.Controllers
         }
 */
         [HttpPost]
-        public ActionResult<TokenIssuer> GetToken([FromBody] LoginViewModel model)
+        public ActionResult<TokenIssuer> GetToken([FromBody] LogInViewModel model)
         {
+            Console.WriteLine($"LogIn\n\temail: {model.Email}\n\tpass:{model.Password}");
             UInt64 exp = 1735689600;
             var aud = "https://lacmus.io";
             var iss = "https://lacmus";

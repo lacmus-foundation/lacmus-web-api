@@ -1,9 +1,10 @@
 using System;
 using System.Text.Json.Serialization;
+using Identity.Models.Token;
 
 namespace Identity.ViewModels.Token
 {
-    public class TokenIssuer : IToken
+    public class TokenIssuer
     {
         [JsonPropertyName("access_token")]
         public AccessToken AccessToken { get; set; }

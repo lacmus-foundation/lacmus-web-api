@@ -1,10 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
+using Identity.ViewModels.Token;
 
-namespace Identity.ViewModels.Token
+namespace Identity.Models.Token
 {
-    public class AccessToken : IToken, IAccessToken, IInfoToken
+    public class AccessToken : IToken, IAccessToken
     {
         [JsonPropertyName("aud")]
         public string Aud { get; set; }

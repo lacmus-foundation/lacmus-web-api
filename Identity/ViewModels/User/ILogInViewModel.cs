@@ -1,6 +1,6 @@
-namespace Identity.ViewModels.Login
+namespace Identity.ViewModels.User
 {
-    public interface ILoginViewModel
+    public interface ILogInViewModel
     {
         public string Email { get; set; }
         public string Password { get; set; }

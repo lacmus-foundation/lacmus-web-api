@@ -1,10 +1,9 @@
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
-using Identity.ViewModels.Login;
 
-namespace Identity.ViewModels.UserLogin
+namespace Identity.ViewModels.User
 {
-    public class LoginViewModel : ILoginViewModel
+    public class LogInViewModel : ILogInViewModel
     {
         [Required]
         [JsonPropertyName("email")]

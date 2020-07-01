@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Identity.ViewModels.Token
+namespace Identity.Models.Token
 {
     public interface IAccessToken
     {
