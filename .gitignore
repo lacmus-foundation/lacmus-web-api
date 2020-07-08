@@ -445,3 +445,5 @@ ASALocalRun/
 
 # Fody files
 *.xsd
+
+.virtualenv
