@@ -18,10 +18,11 @@ namespace Identity.Controllers
         }
         
         // TODO: Получить информацию о конкретном мользователе
-        [HttpGet("{id}")]
-        public async Task<ActionResult<IUser>> Get(int id)
+        [HttpGet("{id}/{fromId}")]
+        public async Task<ActionResult<IUser>> Get(ulong id, ulong fromId)
         {
-            throw new NotImplementedException();
+            Console.WriteLine($"{id} - {fromId}"); // for debug
+            return Ok();
         }
 
         // TODO: Создать нового пользователя
@@ -32,15 +33,15 @@ namespace Identity.Controllers
         }
 
         // TODO: Обновить инфу о пользователе
-        [HttpPut]
-        public async Task<ActionResult<IUser>> Put([FromBody] UpdateUserViewModel model)
+        [HttpPut("{fromId}")]
+        public async Task<ActionResult<IUser>> Put([FromBody] UpdateUserViewModel model, ulong fromId)
         {
             throw new NotImplementedException();
         }
 
         // TODO: Удалить пользователя
-        [HttpDelete("{id}")]
-        public async Task<ActionResult> Delete(int id)
+        [HttpDelete("{id}/{fromId}")]
+        public async Task<ActionResult> Delete(ulong id, ulong fromId)
         {
             throw new NotImplementedException();
         }
