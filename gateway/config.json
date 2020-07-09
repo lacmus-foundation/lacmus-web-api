@@ -86,6 +86,72 @@
           "disable_jwk_security": true
         }
       }
+    },
+    {
+      "endpoint": "/api/v1/predict/push/{model_type}",
+      "method": "POST",
+      "output_encoding": "no-op",
+			"backend": [
+			  {
+          "host":[ "http://predict:5000" ],
+          "url_pattern": "/api/v1/predict/push/{model_type}",
+          "method": "POST",
+          "encoding": "no-op"
+			  }
+      ],
+      "extra_config": {
+        "github.com/devopsfaith/krakend-jose/validator": {
+          "alg": "HS256",
+          "audience": ["https://lacmus.io"],
+          "issuer": "https://lacmus",
+          "roles_key": "roles",
+          "roles": ["user", "admin"],
+          "jwk-url": "http://static_data:8080/jwk/symmetric.json",
+          "disable_jwk_security": true
+        }
+      }
+    },
+    {
+      "endpoint": "/api/v1/predict/pop/{model_type}/{task_id}",
+			"backend": [
+			  {
+          "host":[ "http://predict:5000" ],
+          "url_pattern": "/api/v1/predict/pop/{model_type}/{task_id}",
+          "encoding": "no-op"
+			  }
+      ],
+      "extra_config": {
+        "github.com/devopsfaith/krakend-jose/validator": {
+          "alg": "HS256",
+          "audience": ["https://lacmus.io"],
+          "issuer": "https://lacmus",
+          "roles_key": "roles",
+          "roles": ["user", "admin"],
+          "jwk-url": "http://static_data:8080/jwk/symmetric.json",
+          "disable_jwk_security": true
+        }
+      },
+      "output_encoding": "no-op"
+    },
+    {
+      "endpoint": "/api/v1/predict/doc",
+			"backend": [
+			  {
+          "host":[ "http://predict:5000" ],
+          "url_pattern": "/redoc",
+          "encoding": "no-op"
+			  }
+      ],
+      "output_encoding": "no-op"
+    },
+    {
+      "endpoint": "/api/v1/predict/openapi.json",
+			"backend": [
+			  {
+          "host":[ "http://predict:5000" ],
+          "url_pattern": "/api/v1/predict/openapi.json"
+			  }
+      ]
     }
   ]
 }

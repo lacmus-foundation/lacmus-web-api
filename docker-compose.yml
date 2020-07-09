@@ -29,3 +29,11 @@ services:
       dockerfile: development.dockerfile
     ports:
       - 5000:5000
+  predict:
+    container_name: 'predict'
+    image: 'predict'
+    build:
+      context: ./predict
+      dockerfile: Dockerfile
+    ports:
+      - 5002:5000
