@@ -1,11 +1,11 @@
 from pydantic import BaseModel, Field
-from pydantic.types import List
+from typing import List
 
 class Files(BaseModel):
     files: List[str]
 
 class Tasks(BaseModel):
-    tasks: List[str]
+    tasks: List[str] = []
 
 class TaskResult(BaseModel):
     success: bool = True
