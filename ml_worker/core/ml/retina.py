@@ -1,30 +1,16 @@
 import tensorflow as tf
+import numpy as np
 from keras_retinanet import models
 from keras_retinanet.utils.image import preprocess_image, resize_image
-from enum import Enum
+from core.config import WorkerConfig, get_config
+from core.ml.enum import InferTypeEnum
 import os
-
-class InferTypeEnum(Enum):
-    cpu = 0
-    gpu = 1
-    open_vino_cpu = 2
-
-class MlConfig:
-    weights: str = None
-    min_side: int = None
-    max_side: int = None
-    backbone: str = None
-    labels: dict = None
-    infer_type: InferTypeEnum = InferTypeEnum.cpu
-    alias: str
-
-    def __init__(self, alias: str):
-        self.alias = alias
+import cv2
+import time
 
 class Model:
-    config: MlConfig
-
-    def __init__(self, config: MlConfig) -> None:
+    def __init__(self) -> None:
+        config = get_config()
         assert os.path.isfile(config.weights), f"no such file: {config.weights}"
         assert config.backbone != None, "backbone is None"
         assert config.labels != None, "labels is none"
@@ -39,7 +25,7 @@ class Model:
         else:
             raise Exception(f"unsuported infer_type {self.config.infer_type}")
 
-        self.model = models.load_model(args.model, backbone_name=self.config.backbone)
+        self.model = models.load_model(self.config.weights, backbone_name=self.config.backbone)
 
     def infer(self, in_data: bytes) -> dict:
         # pre-processing
@@ -49,15 +35,17 @@ class Model:
         image = preprocess_image(image)
         
         # inference
+        start_time = time.time()
         boxes, scores, labels = self.model.predict_on_batch(np.expand_dims(image, axis=0))
-        
+        print("done in {} s".format(time.time() - start_time), flush=True)
+
         # post-processing
         boxes /= scale
         objects = []
         result = {
             'objects': objects
         }
-        for box, _, label in zip(boxes[0], scores[0], labels[0]):
+        for box, score, label in zip(boxes[0], scores[0], labels[0]):
             if score < 0.5:
                 break
             b = np.array(box.astype(int)).astype(int)
@@ -88,8 +76,3 @@ class Model:
                 print(len(gpus), "Physical GPUs,", len(logical_gpus), "Logical GPUs")
             except RuntimeError as e:
                 raise Exception(f"unable to setup gpu: {e}")
-
-
-
-        
-    

@@ -1,13 +1,26 @@
 from typing import List
-from starlette.config import Config
-from starlette.datastructures import CommaSeparatedStrings, Secret
+from functools import lru_cache
+from pydantic import BaseSettings
+from core.ml.enum import InferTypeEnum
 
-config = Config(".env")
+# https://github.com/tiangolo/fastapi/issues/508#issuecomment-532360198
+class WorkerConfig(BaseSettings):
+    project_name: str = "Lacmus ml worker"
+    api_prefix: str = "/api/v0"
+    version: str = "0.1.0"
+    debug: bool = False
 
-PROJECT_NAME: str = config("PROJECT_NAME", default="Lacmus web API")
-API_PREFIX: str = config("API_PREFIX", default="/api/v1")
-VERSION: str = config("API_PREFIX", default="0.1.0")
-DEBUG: bool = config("DEBUG", cast=bool, default=False)
+    weights: str = "./snapshotes/lacmus-1-4.h5"
+    min_side: int = 800
+    max_side: int = 1333
+    backbone: str = "resnet50"
+    labels: dict = {0: 'Person'}
+    infer_type: InferTypeEnum = InferTypeEnum.cpu   
 
-REDIS_HOST: str = config("API_PREFIX", default="redis")
-STORAGE_PATH: str = config("API_PREFIX", default="storage")
+    class Config:
+        env_file = '.env'
+        env_file_encoding = 'utf-8'
+
+@lru_cache()
+def get_config() -> WorkerConfig:
+    return WorkerConfig()
