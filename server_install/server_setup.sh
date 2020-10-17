@@ -1,4 +1,6 @@
 chmod +x ./ansible.sh
 ./ansible.sh
 cp ansible_hosts /etc/ansible/hosts
-#ansible-playbook -C playbooks/ftp_docker.yml
+ansible-playbook playbooks/ftp_docker.yml
+ansible-playbook playbooks/minio_docker.yml
+ansible-playbook playbooks/postgres_docker.yml

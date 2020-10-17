@@ -1,6 +1,6 @@
 ---
 
-- hosts: dev_servers
+- hosts: ftp_server
   become: yes
   tasks:
   - name: Ensures dir exists
