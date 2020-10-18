@@ -1,7 +1,17 @@
 FROM     ubuntu:20.04
 
-RUN apt-get update ; apt-get install -y vsftpd
+RUN apt-get update 
+RUN apt-get install -y vsftpd python3 python3-pip
+COPY requirements.txt .
+RUN pip3 install -r requirements.txt
+
+RUN mkdir /etc/ftp_projects
 COPY vsftpd.conf /etc/vsftpd.conf
-CMD service vsftpd start && tail -F /var/log/vsftpd.log
+COPY vsftpd.pam /etc/pam.d/vsftpd
+
+COPY ftp_api/ /root/ftp_api/
+WORKDIR /root/ftp_api
+CMD service vsftpd start && uvicorn server:app --host 0.0.0.0 --port 5001
 
 EXPOSE 21
+EXPOSE 5001
