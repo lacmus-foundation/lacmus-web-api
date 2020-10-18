@@ -41,7 +41,13 @@
 #db-[99:101]-node.example.com
 
 
-[dev_servers]
+[ftp_server]
+127.0.0.1
+
+[minio_server]
+127.0.0.1
+
+[postgres_server]
 127.0.0.1
 
 [all:vars]

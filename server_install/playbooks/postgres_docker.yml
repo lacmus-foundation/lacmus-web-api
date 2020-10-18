@@ -1,0 +1,23 @@
+---
+
+- hosts: postgres_server
+  become: yes
+  tasks:
+  - name: Ensures dir exists
+    file: path=/etc/lacmus/postgres_db state=directory    
+  - name: start postgre docker
+    docker_container:
+      name: postgres_instance
+      image: postgres
+      pull: yes
+      state: started
+      mounts:
+        -
+          source: /etc/lacmus/postgres_db
+          target: /var/lib/postgresql/data
+          type: bind 
+      published_ports:
+        127.0.0.1:5432:5432
+      env:
+        POSTGRES_PASSWORD: "{{ lookup('env','POSTGRES_PASSWORD') }}"
+        PGDATA: /var/lib/postgresql/data/pgdata
