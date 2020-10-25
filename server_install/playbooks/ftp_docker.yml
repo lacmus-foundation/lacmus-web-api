@@ -31,6 +31,8 @@
       published_ports:
         - "0.0.0.0:21:21"
         - "127.0.0.1:5001:5001"
+      env:
+        POSTGRES_PASSWORD: "{{ lookup('env','POSTGRES_PASSWORD') }}"
 
   handlers:
   - name: restart container

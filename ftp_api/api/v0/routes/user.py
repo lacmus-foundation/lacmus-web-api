@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Query
 from core.user_rest_api import createUser
 from core.user_rest_api import UserCreateResult
-from typing import List, Optional
+from typing import List
 from core.user_rest_api import UserRoles
 
 
