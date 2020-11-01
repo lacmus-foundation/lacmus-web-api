@@ -2,9 +2,7 @@ from pydantic import BaseModel
 from enum import auto
 from fastapi_utils.enums import StrEnum
 from typing import List
-from core.ftp import FTPServer
-from core import fs_notify
-import threading
+from core.processing import Processing
 
 
 
@@ -21,9 +19,9 @@ def createProject(users:List[str],id:str,description:str):
         return ProjectCreateResult(status=StatusEnum.failed)
     if len(id)==0:
         return ProjectCreateResult(status=StatusEnum.failed)
+    try:
+        Processing.create_project(users,id,description)
+    except:
+        return ProjectCreateResult(status=StatusEnum.failed)
 
-    ftp_dir = FTPServer.create_project(users,id,description)
-    th = fs_notify.NotifyThread(ftp_dir)
-    th.setDaemon(False)
-    th.start()
     return ProjectCreateResult(status=StatusEnum.success)

@@ -1,22 +1,20 @@
 from inotify.adapters import Inotify
-from core.processing import Processing
+from core import processing
 import threading
 import os
 
 
 class NotifyThread(threading.Thread):
-    def __init__(self,folder):
+    def __init__(self,folder, project_id):
         threading.Thread.__init__(self)
         self.folder = folder
-        print ("NotifyThread init for %s"%folder)
+        self.project_id = project_id
 
     def run(self):
-        print ("NotifyThread start")
         i = Inotify()
         i.add_watch(self.folder)
 
         for event in i.event_gen(yield_nones=False):
             (header, type_names, watch_path, filename) = event
             if ('IN_CLOSE_WRITE' in type_names):
-                Processing.process_incoming_file(os.path.join(watch_path,filename))
-        print ("NotifyThread end :/")
+                processing.Processing.process_incoming_file(watch_path,filename,self.project_id)

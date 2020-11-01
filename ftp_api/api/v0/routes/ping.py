@@ -1,7 +1,6 @@
 from fastapi import APIRouter, HTTPException, Request, Response
-from core.config import PROJECT_NAME, VERSION
+from commons.config import PROJECT_NAME, VERSION
 from core.pong import Pong
-
 
 router = APIRouter()
 
