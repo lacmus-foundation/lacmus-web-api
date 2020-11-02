@@ -1,6 +1,6 @@
 import subprocess
 import os
-from core.config import ROOT_FTP_FOLDER
+from commons.config import ROOT_FTP_FOLDER
 
 
 class FTPServer():
