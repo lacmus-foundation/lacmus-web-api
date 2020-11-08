@@ -2,10 +2,10 @@ from pydantic import BaseModel
 from enum import auto
 from fastapi_utils.enums import StrEnum
 from typing import List
-from commons.lacmusDB.db_definition import User, Role, create_user_entity
+from commons.lacmusDB.db_definition import User
+from commons.lacmusDB.operation.users_projects import create_user_entity
 import uuid
 import requests
-from sqlalchemy.orm import relationship
 
 class StatusEnum(StrEnum):
     success = auto()
@@ -34,6 +34,12 @@ class UserQueryResult(BaseModel):
     projects: List[str]
     email: str
 
+class UserListResult(BaseModel):
+    max_page: int
+    users: List[str]
+
+class UserDeleteResult(BaseModel):
+    result: str
 
 def createUser(nick_name:str,password:str, roles:List[str],
                first_name:str,last_name:str,
@@ -58,4 +64,13 @@ def createUser(nick_name:str,password:str, roles:List[str],
     return UserCreateResult(id=str(user_uuid), status=StatusEnum.success)
 
 def queryUser(id:str):
+    # todo - implement
     return UserQueryResult()
+
+def deleteUser(id:str):
+    # todo - implement
+    return UserDeleteResult()
+
+def listUsers(page:int, count:int):
+    # todo - implement
+    return UserListResult()

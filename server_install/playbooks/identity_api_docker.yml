@@ -21,11 +21,12 @@
       source: build
     notify:
       - restart container
-  - name: start ftp docker
+  - name: start identity docker
     docker_container:
       name: identity
       image: identity_api
       state: started
+      network_mode: host
       published_ports:
         - "0.0.0.0:5002:5002"
       env:

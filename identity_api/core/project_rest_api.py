@@ -2,7 +2,8 @@ from pydantic import BaseModel
 from enum import auto
 from fastapi_utils.enums import StrEnum
 from typing import List
-from commons.lacmusDB.db_definition import Project, User, create_project_entity
+from commons.lacmusDB.db_definition import Project
+from commons.lacmusDB.operation.users_projects import create_project_entity
 import uuid
 import requests
 
@@ -11,15 +12,15 @@ class StatusEnum(StrEnum):
     failed = auto()
 
 class ProjectCreateResult(BaseModel):
-    id: str="";
+    id: str=""
     status: StatusEnum
-    message: str="";
+    message: str=""
 
 def createProject(users:List[str],description:str):
     if len(users)==0:
         return ProjectCreateResult(status=StatusEnum.failed, message="You should provide some users")
     project_uuid = uuid.uuid1()
-    #todo: check user actually exists
+    #todo: check users actually exists
     new_project = Project(uuid=project_uuid,description=description)
     # uuid is too long to create linux group based on it, so for FTP we have to generate shorter id
     project_id = create_project_entity(new_project, users)
@@ -29,4 +30,4 @@ def createProject(users:List[str],description:str):
         #todo: check result
     else:
         return ProjectCreateResult(status=StatusEnum.failed, message = 'Failed to create project in DB')
-    return ProjectCreateResult(status=StatusEnum.success,id=str(uuid))
+    return ProjectCreateResult(status=StatusEnum.success,id=str(project_uuid))

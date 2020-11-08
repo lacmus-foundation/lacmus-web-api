@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from api.v0.routes import ping
+from commons.api import ping
 from api.v0.routes import user
 from api.v0.routes import project
 
