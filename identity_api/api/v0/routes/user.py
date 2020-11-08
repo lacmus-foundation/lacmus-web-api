@@ -1,7 +1,6 @@
 from fastapi import APIRouter, Query
-from core.user_rest_api import createUser,queryUser, UserCreateResult, UserQueryResult
 from typing import List
-from core.user_rest_api import UserRoles
+from core.user_rest_api import *
 
 
 router = APIRouter()
@@ -16,3 +15,12 @@ async def root(nick_name:str,password:str, roles:List[str]=Query(None),
 @router.get("/user", response_model=UserQueryResult)
 async def root(id:str)->UserQueryResult:
     return queryUser(id)
+
+@router.delete("/user",response_model=UserDeleteResult)
+async def root(id:str)->UserDeleteResult:
+    return deleteUser(id)
+
+@router.get("/users",response_model=UserListResult)
+async def root(page:int, count:int)->UserListResult:
+    return listUsers(page, count
+                    )

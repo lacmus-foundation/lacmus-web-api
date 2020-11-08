@@ -16,7 +16,7 @@ def create_project(project_name:str):
     except BucketAlreadyExists as err:
            pass
     except ResponseError as err:
-           raise
+           raise err
 
 def upload_file(project_id:str, file_path:str, file_name: str):
     try:

@@ -50,5 +50,11 @@
 [postgres_server]
 127.0.0.1
 
+[identity_api]
+127.0.0.1
+
+[orchestrator]
+127.0.0.1
+
 [all:vars]
 ansible_python_interpreter=/usr/bin/python3
