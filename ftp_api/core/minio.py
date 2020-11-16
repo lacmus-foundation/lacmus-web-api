@@ -1,29 +1,34 @@
 from minio import Minio
 import os
 from commons import config
+import logging
 
 from minio.error import (ResponseError, BucketAlreadyOwnedByYou,
                          BucketAlreadyExists)
 
-def create_project(project_name:str):
-    minioClient = Minio('localhost:9000',
-                    access_key=config.MINIO_ACCESS_KEY,
-                    secret_key=config.MINIO_SECRET_KEY)
+def bucket_name(id:str): return  'project%s'%id
+
+def get_client():
+    return Minio('localhost:9000',
+                            access_key=config.MINIO_ACCESS_KEY,
+                            secret_key=config.MINIO_SECRET_KEY,
+                            secure=False)
+
+def create_project(project_id:str):
     try:
-           minioClient.make_bucket(project_name)
+        logging.info("Creating on minio project %s"%bucket_name(project_id))
+        minioClient = get_client()
+        minioClient.make_bucket(bucket_name(project_id))
     except BucketAlreadyOwnedByYou as err:
-           pass
+        logging.warning("minio returned error BucketAlreadyOwnedByYou, but it's fine")
+        pass
     except BucketAlreadyExists as err:
-           pass
+        logging.warning("minio returned error BucketAlreadyExists, but it's fine")
+        pass
     except ResponseError as err:
-           raise err
+        logging.error("Cann't create minio bucket for project",exc_info=True)
+        raise err
 
 def upload_file(project_id:str, file_path:str, file_name: str):
-    try:
-        minioClient = Minio('localhost:9000',
-                            access_key='qk1OtxQL54Cf',
-                            secret_key='8VE9zlm1Z0mb')
-
-        minioClient.fput_object(project_id, file_name, os.path.join(file_path,file_name))
-    except ResponseError as err:
-        print(err)
+    minioClient = get_client()
+    minioClient.fput_object(bucket_name(project_id), file_name, os.path.join(file_path,file_name))

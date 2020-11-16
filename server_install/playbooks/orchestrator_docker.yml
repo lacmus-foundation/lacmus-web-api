@@ -3,6 +3,8 @@
 - hosts: orchestrator
   become: yes
   tasks:
+  - name: Ensure logs dir
+    file: path=/etc/lacmus/logs state=directory
   - name: Copy orchestrator
     copy: 
       src : ../../orchestrator
@@ -27,6 +29,11 @@
       image: orchestrator
       network_mode: host
       state: started
+      mounts:
+        -
+          source: /etc/lacmus/logs
+          target: /app/orchestrator/logs
+          type: bind
       env:
         POSTGRES_PASSWORD: "{{ lookup('env','POSTGRES_PASSWORD') }}"
         MINIO_ACCESS_KEY: "{{ lookup('env','MINIO_ACCESS_KEY') }}"
