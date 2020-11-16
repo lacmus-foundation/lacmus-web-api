@@ -3,6 +3,8 @@
 - hosts: identity_api
   become: yes
   tasks:
+  - name: Ensure logs dir
+    file: path=/etc/lacmus/logs state=directory
   - name: Copy identity api
     copy: 
       src : ../../identity_api
@@ -29,6 +31,11 @@
       network_mode: host
       published_ports:
         - "0.0.0.0:5002:5002"
+      mounts:
+        -
+          source: /etc/lacmus/logs
+          target: /app/identity_api/logs
+          type: bind
       env:
         POSTGRES_PASSWORD: "{{ lookup('env','POSTGRES_PASSWORD') }}"
         MINIO_ACCESS_KEY: "{{ lookup('env','MINIO_ACCESS_KEY') }}"

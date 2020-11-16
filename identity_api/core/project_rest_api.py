@@ -6,6 +6,7 @@ from commons.lacmusDB.db_definition import Project
 from commons.lacmusDB.operation.users_projects import create_project_entity
 import uuid
 import requests
+import logging
 
 class StatusEnum(StrEnum):
     success = auto()
@@ -17,17 +18,19 @@ class ProjectCreateResult(BaseModel):
     message: str=""
 
 def createProject(users:List[str],description:str):
+    logging.info("Create project request received for users: %s"%(','.join(users)))
     if len(users)==0:
         return ProjectCreateResult(status=StatusEnum.failed, message="You should provide some users")
     project_uuid = uuid.uuid1()
-    #todo: check users actually exists
     new_project = Project(uuid=project_uuid,description=description)
     # uuid is too long to create linux group based on it, so for FTP we have to generate shorter id
     project_id = create_project_entity(new_project, users)
     if (project_id!=-1):
         ftp_result = requests.post('http://127.0.0.1:5001/api/v1/project',
-                               params={'users': users, 'description':description, 'id': 'project'+str(project_id)})
-        #todo: check result
+                               params={'users': users, 'description':description, 'id': str(project_id)})
+        logging.info("FTP returned %s with reason %s" % (ftp_result.status_code, ftp_result.reason))
+        if ftp_result.status_code!=200:
+            return ProjectCreateResult(status=StatusEnum.failed, message = 'Failed to create project on FTP')
     else:
         return ProjectCreateResult(status=StatusEnum.failed, message = 'Failed to create project in DB')
     return ProjectCreateResult(status=StatusEnum.success,id=str(project_uuid))
