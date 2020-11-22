@@ -1,4 +1,4 @@
-import datetime
+from datetime import datetime
 import logging
 from sqlalchemy.orm import joinedload
 from commons.lacmusDB import db_definition
@@ -20,15 +20,40 @@ def create_file_entity(image:db_definition.Image, project_id: str, user_login:st
     s.commit()
 
 def query_images_for_processing():
-    s = db_definition.get_session()
-    images = s.query(db_definition.Image).options(joinedload('annotation')).\
-        filter(db_definition.ImageAnnotation.processing_start == None)
-    return images.all()
+    try:
+        logging.info("Getting images for processing list from DB")
+        s = db_definition.get_session()
+        images = s.query(db_definition.Image).options(\
+            joinedload(db_definition.Image.user),joinedload(db_definition.Image.project)).\
+            filter(db_definition.Image.processing_start == None).all()
+        s.close()
+        return images
+    except Exception as e:
+        logging.error("Exception while getting projects", exc_info=True)
+
 
 def mark_process_start(images):
     s = db_definition.get_session()
     for i in images:
-        i.processing_start=datetime.now()
-    s.add(images)
+        db_image = s.query(db_definition.Image).filter(db_definition.Image.id == i.id).first()
+        db_image.processing_start=datetime.now()
+        s.add(db_image)
     s.commit()
+    s.close()
 
+def save_responce(image, objects):
+    try:
+        s = db_definition.get_session()
+        db_image = s.query(db_definition.Image).filter(db_definition.Image.id==image.id).first()
+        for raw_obj in objects:
+            object = db_definition.ImageObjects(x_min=raw_obj['xmin'],x_max=raw_obj['xmax'],
+                                                y_min=raw_obj['ymin'],y_max=raw_obj['ymax'],
+                                                class_label=raw_obj['label'],class_number=0)
+            db_image.objects.append(object)
+        db_image.processing_end=datetime.now()
+        s.add(db_image)
+        s.commit()
+        s.close()
+        logging.info('Saved object successfully')
+    except Exception as e:
+        logging.error("Exception while saving projessing results projects", exc_info=True)

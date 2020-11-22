@@ -5,7 +5,7 @@ from commons.lacmusDB import db_definition
 from commons.lacmusDB.operation.image_processing import create_file_entity
 from commons.lacmusDB.operation.users_projects import get_active_projects
 from core import fs_notify
-from core import minio
+from commons import minio
 from core.ftp import FTPServer
 
 

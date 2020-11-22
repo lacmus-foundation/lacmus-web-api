@@ -77,32 +77,21 @@ class Image(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     hash = Column(String, unique=True)
     filename = Column(String)
+    processing_start = Column(DateTime, default=None)  # field says if image is taken for processing
+    processing_end = Column(DateTime, default=None)  # this created when image is processed
     project_id = Column(Integer, ForeignKey('project.id'))
     user_id = Column(Integer, ForeignKey('user.id'))
     # relations
     user = relationship(User, back_populates='images')
     project = relationship(Project, back_populates='images')
-    annotation = relationship('ImageAnnotation')
-
-
-class ImageAnnotation(Base):  # table is intended to store processing results
-    __tablename__ = 'image_annotation'
-    # __table_args__ = {"schema": DB_SCHEMA_NAME}
-    # columns
-    image_id = Column(Integer, ForeignKey('image.id'), primary_key=True)  # as it's 1:1, no need for own PK
-    processing_start = Column(DateTime)  # field says if image is taken for processing
-    processing_end = Column(DateTime)  # this created when image is processed
-    # relations
     objects = relationship('ImageObjects')
-    image = relationship('Image')
-
 
 class ImageObjects(Base):
     __tablename__ = 'image_object'
     # __table_args__ = {"schema": DB_SCHEMA_NAME}
     # columns
     id = Column(Integer, primary_key=True, autoincrement=True)
-    image_id = Column(Integer, ForeignKey('image_annotation.image_id'))
+    image_id = Column(Integer, ForeignKey('image.id'))
     x_min = Column(Integer, nullable=False)
     y_min = Column(Integer, nullable=False)
     x_max = Column(Integer, nullable=False)
@@ -110,7 +99,7 @@ class ImageObjects(Base):
     class_number = Column(Integer, nullable=False)
     class_label = Column(String)
     # relations
-    annotation = relationship(ImageAnnotation, back_populates='objects')
+    image = relationship(Image, back_populates='objects')
 
 
 def get_engine():
