@@ -32,3 +32,14 @@ def create_project(project_id:str):
 def upload_file(project_id:str, file_path:str, file_name: str):
     minioClient = get_client()
     minioClient.fput_object(bucket_name(project_id), file_name, os.path.join(file_path,file_name))
+
+def get_file(project_id:str, file_name: str):
+    try:
+        minioClient = get_client()
+        response = minioClient.get_object(bucket_name(project_id),file_name)
+        return response.data
+    except:
+        logging.error("Cann't get file %s in bucket %s from minio"%(file_name,project_id),exc_info=True)
+    finally:
+        response.close()
+        response.release_conn()
