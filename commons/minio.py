@@ -30,8 +30,12 @@ def create_project(project_id:str):
         raise err
 
 def upload_file(project_id:str, file_path:str, file_name: str):
-    minioClient = get_client()
-    minioClient.fput_object(bucket_name(project_id), file_name, os.path.join(file_path,file_name))
+    try:
+        minioClient = get_client()
+        minioClient.fput_object(bucket_name(project_id), file_name, os.path.join(file_path,file_name))
+    except:
+        logging.error("Cann't upload file %s in bucket %s from minio"%(os.path.join(file_path,file_name),project_id),
+                      exc_info=True)
 
 def get_file(project_id:str, file_name: str):
     try:
@@ -43,3 +47,12 @@ def get_file(project_id:str, file_name: str):
     finally:
         response.close()
         response.release_conn()
+
+def download_to_file(project_id:str, source_file_name:str,target_file:str):
+    try:
+        logging.info("downloading file %s to %s for project %s"%(source_file_name,target_file,project_id))
+        minioClient = get_client()
+        minioClient.fget_object(bucket_name(project_id), source_file_name, target_file)
+    except:
+        logging.error("Cann't download file %s in bucket %s from minio to %s"%(source_file_name,project_id,target_file),
+                      exc_info=True)

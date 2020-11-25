@@ -60,6 +60,8 @@ class FTPServer():
         subprocess.check_call(['chmod', 'g+w', root_project_path])
         [FTPServer.mkdir_exists_ok(os.path.join(root_project_path, i))
          for i in ['result', 'description', 'error']]
+        [FTPServer.mkdir_exists_ok(os.path.join(root_project_path, 'result', i))
+         for i in ['empty', 'found']]
         group_name = 'project%s' % id
         logging.info("creating group %s" % group_name)
         subprocess.check_call(['groupadd', '--force', group_name])
