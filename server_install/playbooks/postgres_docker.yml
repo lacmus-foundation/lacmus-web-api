@@ -4,7 +4,7 @@
   become: yes
   tasks:
   - name: Ensures dir exists
-    file: path=/etc/lacmus/postgres_db state=directory    
+    file: path=/media/data/postgres_db state=directory    
   - name: start postgre docker
     docker_container:
       name: postgres_instance
@@ -13,7 +13,7 @@
       state: started
       mounts:
         -
-          source: /etc/lacmus/postgres_db
+          source: /media/data/postgres_db
           target: /var/lib/postgresql/data
           type: bind 
       published_ports:
