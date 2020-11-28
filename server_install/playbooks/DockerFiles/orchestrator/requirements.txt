@@ -2,3 +2,4 @@ sqlalchemy
 psycopg2
 minio
 starlette
+python-openstackclient

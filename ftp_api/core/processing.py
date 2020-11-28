@@ -56,6 +56,7 @@ class Processing():
     @staticmethod
     def init_listeners():
         projects = get_active_projects()
+        # todo - check if there are image results unpublished and publish it, for active projects
         for p in projects:
             Processing.start_thread(FTPServer.get_project_path(p.id), p.id)
 

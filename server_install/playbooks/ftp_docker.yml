@@ -6,7 +6,7 @@
   - name: Ensures dir exists
     file: path=/etc/lacmus/DockerFiles/ftp state=directory
   - name: Ensure logs dir
-    file: path=/etc/lacmus/logs state=directory
+    file: path=/media/data/logs state=directory
   - name: Copy ftp api
     copy: 
       src : ../../ftp_api
@@ -36,7 +36,7 @@
         - "127.0.0.1:5001:5001"
       mounts:
         -
-          source: /etc/lacmus/logs
+          source: /media/data/logs
           target: /root/ftp_api/logs
           type: bind
       env:

@@ -4,7 +4,7 @@
   become: yes
   tasks:
   - name: Ensure logs dir
-    file: path=/etc/lacmus/logs state=directory
+    file: path=/media/data/logs state=directory
   - name: Copy identity api
     copy: 
       src : ../../identity_api
@@ -33,7 +33,7 @@
         - "0.0.0.0:5002:5002"
       mounts:
         -
-          source: /etc/lacmus/logs
+          source: /media/data/logs
           target: /app/identity_api/logs
           type: bind
       env:

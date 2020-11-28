@@ -4,7 +4,7 @@
   become: yes
   tasks:
   - name: Ensures dir exists
-    file: path=/etc/lacmus/data state=directory    
+    file: path=/media/data/minio state=directory    
   - name: start minio docker
     docker_container:
       name: minio
@@ -14,7 +14,7 @@
       state: started
       mounts:
         -
-          source: /etc/lacmus/data
+          source: /media/data/minio
           target: /data
           type: bind 
       published_ports:
