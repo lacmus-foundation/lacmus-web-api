@@ -1,7 +1,6 @@
 from typing import List
 from functools import lru_cache
 from pydantic import BaseSettings
-from core.ml.enum import InferTypeEnum
 
 # https://github.com/tiangolo/fastapi/issues/508#issuecomment-532360198
 class WorkerConfig(BaseSettings):
@@ -10,12 +9,11 @@ class WorkerConfig(BaseSettings):
     version: str = "0.1.0"
     debug: bool = False
 
-    weights: str = "./snapshotes/lacmus_v5_interface.h5"
-    min_side: int = 2100
-    max_side: int = 2100
-    backbone: str = "resnet50"
-    labels: dict = {0: 'Person'}
-    infer_type: InferTypeEnum = InferTypeEnum.cpu   
+    db_user: str = "test"
+    db_password: str = "password"
+    db_host: str = "postgres"
+    db_port: int = 5432
+    db_name: str = "example"
 
     class Config:
         env_file = '.env'
