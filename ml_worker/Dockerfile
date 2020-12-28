@@ -1,4 +1,4 @@
-FROM tensorflow/tensorflow:2.1.1-gpu
+FROM tensorflow/tensorflow:2.3.0
 
 # install debian packages
 ENV DEBIAN_FRONTEND noninteractive
@@ -8,8 +8,10 @@ RUN apt-get update -qq \
     build-essential \
     wget \
     git \
-    g++ \
     cython \
+    ffmpeg \
+    libsm6 \
+    libxext6 \
     # requirements for numpy
     libopenblas-base \
     python3-numpy \
@@ -18,13 +20,8 @@ RUN apt-get update -qq \
     python3-h5py \
     python3-yaml \
     python3-pydot \
-    libgl1-mesa-glx \
  && apt-get clean \
  && rm -rf /var/lib/apt/lists/*
-
-# install application
-ARG KERAS_VERSION=2.3.1
-ENV KERAS_BACKEND=tensorflow
 
 RUN mkdir /app
 WORKDIR /app
@@ -32,7 +29,7 @@ COPY requirements.txt .
 
 RUN git clone https://github.com/lacmus-foundation/lacmus.git \
     && pip3 install --upgrade setuptools \
-    && pip3 --no-cache-dir install --no-dependencies git+https://github.com/fchollet/keras.git@${KERAS_VERSION} \
+    && pip3 --no-cache-dir install keras==2.4.3 \
     && pip3 install opencv-python \
     && cd /app/lacmus && pip3 install . --user \
     && python3 setup.py build_ext --inplace \

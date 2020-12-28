@@ -10,9 +10,9 @@ class WorkerConfig(BaseSettings):
     version: str = "0.1.0"
     debug: bool = False
 
-    weights: str = "./snapshotes/lacmus-1-4.h5"
-    min_side: int = 800
-    max_side: int = 1333
+    weights: str = "./snapshotes/lacmus_v5_interface.h5"
+    min_side: int = 2100
+    max_side: int = 2100
     backbone: str = "resnet50"
     labels: dict = {0: 'Person'}
     infer_type: InferTypeEnum = InferTypeEnum.cpu   
