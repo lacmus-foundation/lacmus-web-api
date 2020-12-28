@@ -1,43 +1,40 @@
 ---
 
-- hosts: ftp_server
+- hosts: identity_api
   become: yes
   tasks:
-  - name: Ensures dir exists
-    file: path=/etc/lacmus/DockerFiles/ftp state=directory
   - name: Ensure logs dir
     file: path=/media/data/logs state=directory
-  - name: Copy ftp api
+  - name: Copy identity api
     copy: 
-      src : ../../ftp_api
-      dest : /etc/lacmus/DockerFiles/ftp
+      src : ../../identity_api
+      dest : /etc/lacmus/DockerFiles/identity
   - name: Copy local files
     copy: 
-      src : DockerFiles/ftp/
-      dest : /etc/lacmus/DockerFiles/ftp      
+      src : DockerFiles/identity/
+      dest : /etc/lacmus/DockerFiles/identity      
   - name: Build image
     docker_image:
-      name: vsftpd
+      name: identity_api
       build:
-        path: /etc/lacmus/DockerFiles/ftp
+        path: /etc/lacmus/DockerFiles/identity
         pull: yes
       force_source: yes
       source: build
     notify:
       - restart container
-  - name: start ftp docker
+  - name: start identity docker
     docker_container:
-      name: ftp
-      image: vsftpd
+      name: identity
+      image: identity_api
       state: started
       network_mode: host
       published_ports:
-        - "0.0.0.0:21:21"
-        - "127.0.0.1:5001:5001"
+        - "0.0.0.0:5002:5002"
       mounts:
         -
           source: /media/data/logs
-          target: /root/ftp_api/logs
+          target: /app/identity_api/logs
           type: bind
       env:
         POSTGRES_PASSWORD: "{{ lookup('env','POSTGRES_PASSWORD') }}"
@@ -47,6 +44,6 @@
   handlers:
   - name: restart container
     docker_container:
-      name: ftp
-      image: vsftpd
+      name: identity
+      image: identity_api
       restart: yes

@@ -1,0 +1,54 @@
+---
+
+- hosts: orchestrator
+  become: yes
+  tasks:
+  - name: Ensure logs dir
+    file: path=/media/data/logs state=directory
+  - name: Copy orchestrator
+    copy: 
+      src : ../../orchestrator
+      dest : /etc/lacmus/DockerFiles/orchestrator
+  - name: Copy local files
+    copy: 
+      src : DockerFiles/orchestrator/
+      dest : /etc/lacmus/DockerFiles/orchestrator      
+  - name: Build image
+    docker_image:
+      name: orchestrator
+      build:
+        path: /etc/lacmus/DockerFiles/orchestrator
+        pull: yes
+      force_source: yes
+      source: build
+    notify:
+      - restart container
+  - name: start orchestrator docker
+    docker_container:
+      name: orchestrator_instance
+      image: orchestrator
+      network_mode: host
+      state: started
+      mounts:
+        -
+          source: /media/data/logs
+          target: /app/orchestrator/logs
+          type: bind
+      env:
+        POSTGRES_PASSWORD: "{{ lookup('env','POSTGRES_PASSWORD') }}"
+        MINIO_ACCESS_KEY: "{{ lookup('env','MINIO_ACCESS_KEY') }}"
+        MINIO_SECRET_KEY: "{{ lookup('env','MINIO_SECRET_KEY') }}"
+        OS_IDENTITY_API_VERSION: "{{ lookup('env','OS_IDENTITY_API_VERSION') }}"
+        OS_AUTH_URL: "{{ lookup('env','OS_AUTH_URL') }}"
+        OS_USERNAME: "{{ lookup('env','OS_USERNAME') }}"
+        OS_PASSWORD: "{{ lookup('env','OS_PASSWORD') }}"
+        OS_PROJECT_NAME: "{{ lookup('env','OS_PROJECT_NAME') }}"
+        OS_PROJECT_DOMAIN_NAME: "{{ lookup('env','OS_PROJECT_DOMAIN_NAME') }}"
+        OS_USER_DOMAIN_NAME: "{{ lookup('env','OS_USER_DOMAIN_NAME') }}"
+
+  handlers:
+  - name: restart container
+    docker_container:
+      name: orchestrator_instance
+      image: orchestrator
+      restart: yes

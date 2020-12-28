@@ -1,0 +1,7 @@
+fastapi
+fastapi-utils
+uvicorn
+sqlalchemy
+psycopg2
+minio
+requests

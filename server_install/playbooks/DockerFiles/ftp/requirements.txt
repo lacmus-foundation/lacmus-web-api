@@ -1,0 +1,9 @@
+fastapi
+fastapi-utils
+python-multipart
+inotify
+uvicorn
+sqlalchemy
+psycopg2
+minio
+Pillow
