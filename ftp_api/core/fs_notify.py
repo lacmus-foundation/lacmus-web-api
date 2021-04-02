@@ -2,6 +2,7 @@ from inotify.adapters import Inotify
 from core import processing
 import threading
 import logging
+import os
 
 class NotifyThread(threading.Thread):
     def __init__(self,folder, project_id):
@@ -11,6 +12,14 @@ class NotifyThread(threading.Thread):
         self.project_id = project_id
 
     def run(self):
+        logging.info("Running notify thread. First scan files from last run")
+        for f in os.listdir(self.folder):
+            if os.path.isfile(os.path.join(self.folder,f)):
+                logging.info("File %s noticed unprocessed notify thread for project %s in %s"%(f,
+                                                                                      self.project_id,self.folder))
+                processing.Processing.process_incoming_file(self.folder,f,self.project_id)
+
+        logging.info("Scan complete, start watching events")
         i = Inotify()
         i.add_watch(self.folder)
 
