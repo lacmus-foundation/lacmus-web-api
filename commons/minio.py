@@ -33,9 +33,10 @@ def upload_file(project_id:str, file_path:str, file_name: str):
     try:
         minioClient = get_client()
         minioClient.fput_object(bucket_name(project_id), file_name, os.path.join(file_path,file_name))
-    except:
+    except Exception as ex:
         logging.error("Cann't upload file %s in bucket %s from minio"%(os.path.join(file_path,file_name),project_id),
                       exc_info=True)
+        raise ex
 
 def get_file(project_id:str, file_name: str):
     try:

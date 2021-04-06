@@ -81,7 +81,21 @@ class FTPServer():
     def move_file_to_error(path: str, filename: str):
         to_path = os.path.join(path, 'error')
         logging.info("moving from %s to %s " % (os.path.join(path, filename),os.path.join(to_path, filename) ))
-        os.rename(os.path.join(path, filename), os.path.join(to_path, filename))
+        try:
+            os.rename(os.path.join(path, filename), os.path.join(to_path, filename))
+            logging.info("moved %s to %s"%(os.path.join(path, filename),os.path.join(to_path, filename)))
+        except Exception as ex:
+            logging.info("Cann't move file to error, creating error message", exc_info=ex)
+            try:
+                f = open(os.path.join(to_path,filename+".TXT"),"wt")
+                print("Cann't move file to error, which can be caused by connection failure during uploading",file=f)
+                print("Please re-upload file again", file=f)
+                f.close()
+                logging.info("Error message created in %s"%(os.path.join(to_path,filename+".TXT")))
+            except Exception as ex_i:
+                logging.info("Can't even create error message, giving up",exc_info=ex_i)
+                return
+            return
 
     @staticmethod
     def remove_file(path: str, filename: str):
