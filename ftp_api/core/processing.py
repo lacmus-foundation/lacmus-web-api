@@ -15,6 +15,10 @@ class Processing():
     def process_incoming_file(path: str, file_name: str, project_id: str):
         try:
             logging.info("verifying file %s in %s" % (file_name, path))
+            if file_name == "command-clear.txt":
+                FTPServer.clear_results(path)
+                logging.info("Command to clean processed successfully")
+                return
             im = Image.open(os.path.join(path, file_name))
             im.verify()
         except Exception as ex:

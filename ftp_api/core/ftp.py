@@ -105,3 +105,15 @@ class FTPServer():
     @staticmethod
     def get_user_login(path: str, filename: str) -> str:
         return getpwuid(os.stat(os.path.join(path, filename)).st_uid).pw_name
+
+    @staticmethod
+    def clear_results(path: str):
+        try:
+            logging.info("Cleaning processed files in %s",path)
+            paths = [os.path.join(path,'result','empty'),
+                     os.path.join(path,'result','found'),
+                     os.path.join(path,'error')]
+            [[os.unlink(os.path.join(p,file)) for file in os.listdir(p)] for p in paths]
+            os.unlink(os.path.join(path,"command-clear.txt"))
+        except Exception as ex:
+            logging.error("Exception while removing processed files", exc_info=True)
