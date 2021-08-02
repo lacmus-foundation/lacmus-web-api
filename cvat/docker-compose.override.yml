@@ -1,0 +1,32 @@
+version: '3.3'
+
+services:
+  cvat:
+    environment:
+      CVAT_SHARE_URL: 'Mounted from /media/data/cvat host directory'
+    volumes:
+      - cvat_share:/home/django/share:ro
+  traefik:
+    image: traefik:v2.4.11
+    depends_on:
+      - cvat_ui
+    command:
+      - "--providers.docker.exposedByDefault=false"
+      - "--providers.docker.network=cvat"
+      - "--entryPoints.web.address=:8080"
+      - "--entryPoints.dashboard.address=:8090"
+      - "--api.dashboard=true"
+      - "--log=true"
+      - "--log.level=DEBUG"
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.dashboard.entrypoints=dashboard
+      - traefik.http.routers.dashboard.service=api@internal
+      - traefik.http.routers.dashboard.rule=Host(`${CVAT_HOST:-localhost}`)
+
+volumes:
+  cvat_share:
+    driver_opts:
+      type: none
+      device: /media/data/cvat
+      o: bind
