@@ -4,6 +4,7 @@ from fastapi_utils.enums import StrEnum
 from typing import List
 from commons.lacmusDB.db_definition import User
 from commons.lacmusDB.operation.users_projects import create_user_entity, check_user_exists
+import commons.config as config
 import uuid
 import requests
 import logging
@@ -74,7 +75,7 @@ def createUser(nick_name:str,password:str, roles:List[str],
     logging.info("User created in DB, creating it on FTP")
     # todo pass server address as parameter
     try:
-        ftp_result = requests.post('http://127.0.0.1:5001/api/v1/user',
+        ftp_result = requests.post('http://%s:%i/api/v1/user'%(config.FTP_SERVER,config.FTP_API_PORT),
                   params={'nick_name':nick_name, 'password':password, 'roles':roles })
         logging.info("FTP returned %s with reason %s"%(ftp_result.status_code,ftp_result.reason))
         if (ftp_result.status_code!=200):

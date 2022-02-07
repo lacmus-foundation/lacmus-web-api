@@ -16,7 +16,7 @@
           source: /media/data/postgres_db
           target: /var/lib/postgresql/data
           type: bind 
-      published_ports:
+      exposed_ports:
         127.0.0.1:5432:5432
       env:
         POSTGRES_PASSWORD: "{{ lookup('env','POSTGRES_PASSWORD') }}"

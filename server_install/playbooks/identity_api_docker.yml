@@ -29,7 +29,7 @@
       image: identity_api
       state: started
       network_mode: host
-      published_ports:
+      exposed_ports:
         - "0.0.0.0:5002:5002"
       mounts:
         -
@@ -38,8 +38,8 @@
           type: bind
       env:
         POSTGRES_PASSWORD: "{{ lookup('env','POSTGRES_PASSWORD') }}"
-        MINIO_ACCESS_KEY: "{{ lookup('env','MINIO_ACCESS_KEY') }}"
-        MINIO_SECRET_KEY: "{{ lookup('env','MINIO_SECRET_KEY') }}"
+        MINIO_ROOT_USER: "{{ lookup('env','MINIO_ROOT_USER') }}"
+        MINIO_ROOT_PASSWORD: "{{ lookup('env','MINIO_ROOT_PASSWORD') }}"
 
   handlers:
   - name: restart container

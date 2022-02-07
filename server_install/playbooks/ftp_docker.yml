@@ -32,7 +32,8 @@
       state: started
       network_mode: host
       published_ports:
-        - "0.0.0.0:21:21"
+        - "21:21"
+      exposed_ports:
         - "127.0.0.1:5001:5001"
       mounts:
         -
@@ -41,8 +42,8 @@
           type: bind
       env:
         POSTGRES_PASSWORD: "{{ lookup('env','POSTGRES_PASSWORD') }}"
-        MINIO_ACCESS_KEY: "{{ lookup('env','MINIO_ACCESS_KEY') }}"
-        MINIO_SECRET_KEY: "{{ lookup('env','MINIO_SECRET_KEY') }}"
+        MINIO_ROOT_USER: "{{ lookup('env','MINIO_ROOT_USER') }}"
+        MINIO_ROOT_PASSWORD: "{{ lookup('env','MINIO_ROOT_PASSWORD') }}"
 
   handlers:
   - name: restart container

@@ -1,17 +1,12 @@
 from sqlalchemy import Column, String, Integer, DateTime, ForeignKey, event
-from sqlalchemy import DDL
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, backref
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from commons.config import POSTGRES_PASSWORD, DB_SCHEMA_NAME
+from commons.config import POSTGRES_PASSWORD, POSTGRES_SERVER
 import logging
 
 Base = declarative_base()
-
-
-# todo: pass server address as parameter, not 127.0.0.1
-
 
 class User(Base):
     __tablename__ = 'user'
@@ -103,7 +98,7 @@ class ImageObjects(Base):
 
 
 def get_engine():
-    return create_engine('postgresql://postgres:%s@127.0.0.1/postgres' % POSTGRES_PASSWORD)
+    return create_engine('postgresql://postgres:%s@%s/postgres' % (POSTGRES_PASSWORD,POSTGRES_SERVER))
 
 
 def get_session():
@@ -119,7 +114,6 @@ def init_db():
     event.listen(Role.__table__, 'after_create', insert_initial_roles)
     try:
         e = get_engine()
-        # e.execute(DDL("CREATE SCHEMA IF NOT EXISTS %s"%DB_SCHEMA_NAME))
         Base.metadata.create_all(e)  # docs says will no re-create tables, once exists
     except Exception as e:
         logging.error("Exception while init DB", exc_info=True)

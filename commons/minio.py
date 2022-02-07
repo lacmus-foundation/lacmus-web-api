@@ -8,9 +8,9 @@ from minio.error import (InvalidResponseError, S3Error)
 def bucket_name(id:str): return  'project%s'%id
 
 def get_client():
-    return Minio('localhost:9000',
-                            access_key=config.MINIO_ACCESS_KEY,
-                            secret_key=config.MINIO_SECRET_KEY,
+    return Minio('%s:9000'%config.MINIO_SERVER,
+                            access_key=config.MINIO_ROOT_USER,
+                            secret_key=config.MINIO_ROOT_PASSWORD,
                             secure=False)
 
 def create_project(project_id:str):
@@ -19,7 +19,7 @@ def create_project(project_id:str):
         minioClient = get_client()
         if not minioClient.bucket_exists(bucket_name(project_id)):
             minioClient.make_bucket(bucket_name(project_id))
-    except S3Error as exc:
+    except S3Error as err:
         logging.error("Cann't create minio bucket for project",exc_info=True)
         raise err
     except InvalidResponseError as err:

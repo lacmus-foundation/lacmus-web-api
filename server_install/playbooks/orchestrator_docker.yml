@@ -36,15 +36,8 @@
           type: bind
       env:
         POSTGRES_PASSWORD: "{{ lookup('env','POSTGRES_PASSWORD') }}"
-        MINIO_ACCESS_KEY: "{{ lookup('env','MINIO_ACCESS_KEY') }}"
-        MINIO_SECRET_KEY: "{{ lookup('env','MINIO_SECRET_KEY') }}"
-        OS_IDENTITY_API_VERSION: "{{ lookup('env','OS_IDENTITY_API_VERSION') }}"
-        OS_AUTH_URL: "{{ lookup('env','OS_AUTH_URL') }}"
-        OS_USERNAME: "{{ lookup('env','OS_USERNAME') }}"
-        OS_PASSWORD: "{{ lookup('env','OS_PASSWORD') }}"
-        OS_PROJECT_NAME: "{{ lookup('env','OS_PROJECT_NAME') }}"
-        OS_PROJECT_DOMAIN_NAME: "{{ lookup('env','OS_PROJECT_DOMAIN_NAME') }}"
-        OS_USER_DOMAIN_NAME: "{{ lookup('env','OS_USER_DOMAIN_NAME') }}"
+        MINIO_ROOT_USER: "{{ lookup('env','MINIO_ROOT_USER') }}"
+        MINIO_ROOT_PASSWORD: "{{ lookup('env','MINIO_ROOT_PASSWORD') }}"
 
   handlers:
   - name: restart container

@@ -17,10 +17,10 @@
           source: /media/data/minio
           target: /data
           type: bind 
-      published_ports:
+      exposed_ports:
         127.0.0.1:9000:9000
       env:
-        MINIO_ACCESS_KEY: "{{ lookup('env','MINIO_ACCESS_KEY') }}"
-        MINIO_SECRET_KEY: "{{ lookup('env','MINIO_SECRET_KEY') }}"
+        MINIO_ROOT_USER: "{{ lookup('env','MINIO_ROOT_USER') }}"
+        MINIO_ROOT_PASSWORD: "{{ lookup('env','MINIO_ROOT_PASSWORD') }}"
       detach: true
       tty: true

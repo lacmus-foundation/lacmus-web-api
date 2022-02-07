@@ -4,6 +4,7 @@ from fastapi_utils.enums import StrEnum
 from typing import List
 from commons.lacmusDB.db_definition import Project
 from commons.lacmusDB.operation.users_projects import create_project_entity
+import commons.config as config
 import uuid
 import requests
 import logging
@@ -26,7 +27,7 @@ def createProject(users:List[str],description:str):
     # uuid is too long to create linux group based on it, so for FTP we have to generate shorter id
     project_id = create_project_entity(new_project, users)
     if (project_id!=-1):
-        ftp_result = requests.post('http://127.0.0.1:5001/api/v1/project',
+        ftp_result = requests.post('http://%s:%i/api/v1/project'%(config.FTP_SERVER,config.FTP_API_PORT),
                                params={'users': users, 'description':description, 'id': str(project_id)})
         logging.info("FTP returned %s with reason %s" % (ftp_result.status_code, ftp_result.reason))
         if ftp_result.status_code!=200:

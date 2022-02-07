@@ -1,4 +1,4 @@
-FROM     ubuntu:20.04
+FROM     ubuntu:focal
 
 RUN apt-get update 
 RUN apt-get install -y vsftpd python3 python3-pip postgresql-common libpq-dev
