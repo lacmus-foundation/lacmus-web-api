@@ -30,7 +30,9 @@
       name: ftp
       image: vsftpd
       state: started
-      network_mode: host
+      networks:
+        - name: lacmus_server
+      networks_cli_compatible: yes
       published_ports:
         - "21:21"
       exposed_ports:

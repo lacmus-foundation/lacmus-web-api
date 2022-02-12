@@ -1,4 +1,6 @@
 FROM     ubuntu:focal
+ENV TZ=Europe/Moscow
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 RUN apt-get update 
 RUN apt-get install -y vsftpd python3 python3-pip postgresql-common libpq-dev

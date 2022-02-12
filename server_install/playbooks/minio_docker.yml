@@ -10,6 +10,9 @@
       name: minio
       image: minio/minio
       pull: yes
+      networks:
+        - name: lacmus_server
+      networks_cli_compatible: yes
       command: server /data
       state: started
       mounts:
@@ -18,7 +21,7 @@
           target: /data
           type: bind 
       exposed_ports:
-        127.0.0.1:9000:9000
+        - "9000:9000"
       env:
         MINIO_ROOT_USER: "{{ lookup('env','MINIO_ROOT_USER') }}"
         MINIO_ROOT_PASSWORD: "{{ lookup('env','MINIO_ROOT_PASSWORD') }}"

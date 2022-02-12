@@ -7,17 +7,20 @@
     file: path=/media/data/postgres_db state=directory    
   - name: start postgre docker
     docker_container:
-      name: postgres_instance
+      name: postgres
       image: postgres
       pull: yes
       state: started
+      networks:
+        - name: lacmus_server
+      networks_cli_compatible: yes
       mounts:
         -
           source: /media/data/postgres_db
           target: /var/lib/postgresql/data
           type: bind 
       exposed_ports:
-        127.0.0.1:5432:5432
+        - "5432:5432"
       env:
         POSTGRES_PASSWORD: "{{ lookup('env','POSTGRES_PASSWORD') }}"
         PGDATA: /var/lib/postgresql/data/pgdata

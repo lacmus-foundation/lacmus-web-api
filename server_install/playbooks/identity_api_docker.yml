@@ -28,9 +28,11 @@
       name: identity
       image: identity_api
       state: started
-      network_mode: host
+      networks:
+        - name: lacmus_server
+      networks_cli_compatible: yes
       exposed_ports:
-        - "0.0.0.0:5002:5002"
+        - "5002:5002"
       mounts:
         -
           source: /media/data/logs
