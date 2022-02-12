@@ -6,7 +6,7 @@
   - name: Copy worker code
     copy: 
       src : ../../ml_worker_yolo5
-      dest : /etc/lacmus/DockerFiles/ml_worker_yolo5
+      dest : /etc/lacmus/DockerFiles
   - name: Copy local files
     copy: 
       src : DockerFiles/ml_worker_yolo5/
@@ -19,5 +19,3 @@
         pull: yes
       force_source: yes
       source: build
-    notify:
-      - restart container

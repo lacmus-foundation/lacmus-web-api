@@ -2,6 +2,7 @@ import time
 import uuid
 import docker
 import logging
+from docker import types
 import requests
 import commons.config as config
 
@@ -21,7 +22,10 @@ def create_ml_worker():
         logging.info("starting worker")
         worker_cont = client.containers.run(config.DOCKER_IMAGE_NAME, None, detach=True,
                                             name="lacmus_ml_worker_%s" % uuid.uuid4(),
-                                            network=config.DOCKER_NETWORK)
+                                            network=config.DOCKER_NETWORK,
+                                            device_requests=[docker.types.DeviceRequest(
+                                                count=-1, capabilities=[['gpu']]
+                                            )])
         container = worker_cont
         try_attempts = 0
         while True:
@@ -43,7 +47,7 @@ def create_ml_worker():
                 logging.info("Got exception during ping, seems worker is not up yet, wait 2 sec. Try=%i" % try_attempts)
                 time.sleep(2)
     except:
-        logging.error("openstack: failed create worker ", exc_info=True)
+        logging.error("docker: failed create worker ", exc_info=True)
         return None
 
 
