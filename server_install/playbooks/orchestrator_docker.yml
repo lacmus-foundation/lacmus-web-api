@@ -4,7 +4,7 @@
   become: yes
   tasks:
   - name: Ensure logs dir
-    file: path=/media/data/logs state=directory
+    file: path=/mnt/data-01/logs state=directory
   - name: Copy orchestrator
     copy: 
       src : ../../orchestrator
@@ -33,7 +33,7 @@
       state: started
       mounts:
         -
-          source: /media/data/logs
+          source: /mnt/data-01/logs
           target: /app/orchestrator/logs
           type: bind
         -

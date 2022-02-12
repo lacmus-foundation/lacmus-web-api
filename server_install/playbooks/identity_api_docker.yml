@@ -4,7 +4,7 @@
   become: yes
   tasks:
   - name: Ensure logs dir
-    file: path=/media/data/logs state=directory
+    file: path=/mnt/data-01/logs state=directory
   - name: Copy identity api
     copy: 
       src : ../../identity_api
@@ -35,7 +35,7 @@
         - "5002:5002"
       mounts:
         -
-          source: /media/data/logs
+          source: /mnt/data-01/logs
           target: /app/identity_api/logs
           type: bind
       env:

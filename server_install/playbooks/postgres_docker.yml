@@ -4,7 +4,7 @@
   become: yes
   tasks:
   - name: Ensures dir exists
-    file: path=/media/data/postgres_db state=directory    
+    file: path=/mnt/data-01/postgres_db state=directory    
   - name: start postgre docker
     docker_container:
       name: postgres
@@ -16,7 +16,7 @@
       networks_cli_compatible: yes
       mounts:
         -
-          source: /media/data/postgres_db
+          source: /mnt/data-01/postgres_db
           target: /var/lib/postgresql/data
           type: bind 
       exposed_ports:

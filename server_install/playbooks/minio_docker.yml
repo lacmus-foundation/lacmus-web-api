@@ -4,7 +4,7 @@
   become: yes
   tasks:
   - name: Ensures dir exists
-    file: path=/media/data/minio state=directory    
+    file: path=/mnt/data-01/minio state=directory    
   - name: start minio docker
     docker_container:
       name: minio
@@ -17,7 +17,7 @@
       state: started
       mounts:
         -
-          source: /media/data/minio
+          source: /mnt/data-01/minio
           target: /data
           type: bind 
       exposed_ports:
