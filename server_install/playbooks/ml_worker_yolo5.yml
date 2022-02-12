@@ -1,0 +1,21 @@
+---
+# This container is not supposed to start automaticaly and will start on orchestrator request, when there are images to process
+- hosts: orchestrator
+  become: yes
+  tasks:
+  - name: Copy worker code
+    copy: 
+      src : ../../ml_worker_yolo5
+      dest : /etc/lacmus/DockerFiles
+  - name: Copy local files
+    copy: 
+      src : DockerFiles/ml_worker_yolo5/
+      dest : /etc/lacmus/DockerFiles/ml_worker_yolo5      
+  - name: Build image
+    docker_image:
+      name: ml_worker_yolo5
+      build:
+        path: /etc/lacmus/DockerFiles/ml_worker_yolo5
+        pull: yes
+      force_source: yes
+      source: build

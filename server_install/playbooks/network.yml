@@ -1,0 +1,8 @@
+---
+
+- hosts: orchestrator
+  become: yes
+  tasks:
+  - name: create network
+    docker_network:
+      name: lacmus_server

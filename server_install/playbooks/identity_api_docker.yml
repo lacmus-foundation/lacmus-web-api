@@ -4,7 +4,7 @@
   become: yes
   tasks:
   - name: Ensure logs dir
-    file: path=/media/data/logs state=directory
+    file: path=/mnt/data-01/logs state=directory
   - name: Copy identity api
     copy: 
       src : ../../identity_api
@@ -28,18 +28,20 @@
       name: identity
       image: identity_api
       state: started
-      network_mode: host
-      published_ports:
-        - "0.0.0.0:5002:5002"
+      networks:
+        - name: lacmus_server
+      networks_cli_compatible: yes
+      exposed_ports:
+        - "5002:5002"
       mounts:
         -
-          source: /media/data/logs
+          source: /mnt/data-01/logs
           target: /app/identity_api/logs
           type: bind
       env:
         POSTGRES_PASSWORD: "{{ lookup('env','POSTGRES_PASSWORD') }}"
-        MINIO_ACCESS_KEY: "{{ lookup('env','MINIO_ACCESS_KEY') }}"
-        MINIO_SECRET_KEY: "{{ lookup('env','MINIO_SECRET_KEY') }}"
+        MINIO_ROOT_USER: "{{ lookup('env','MINIO_ROOT_USER') }}"
+        MINIO_ROOT_PASSWORD: "{{ lookup('env','MINIO_ROOT_PASSWORD') }}"
 
   handlers:
   - name: restart container

@@ -4,23 +4,26 @@
   become: yes
   tasks:
   - name: Ensures dir exists
-    file: path=/media/data/minio state=directory    
+    file: path=/mnt/data-01/minio state=directory    
   - name: start minio docker
     docker_container:
       name: minio
       image: minio/minio
       pull: yes
+      networks:
+        - name: lacmus_server
+      networks_cli_compatible: yes
       command: server /data
       state: started
       mounts:
         -
-          source: /media/data/minio
+          source: /mnt/data-01/minio
           target: /data
           type: bind 
-      published_ports:
-        127.0.0.1:9000:9000
+      exposed_ports:
+        - "9000:9000"
       env:
-        MINIO_ACCESS_KEY: "{{ lookup('env','MINIO_ACCESS_KEY') }}"
-        MINIO_SECRET_KEY: "{{ lookup('env','MINIO_SECRET_KEY') }}"
+        MINIO_ROOT_USER: "{{ lookup('env','MINIO_ROOT_USER') }}"
+        MINIO_ROOT_PASSWORD: "{{ lookup('env','MINIO_ROOT_PASSWORD') }}"
       detach: true
       tty: true

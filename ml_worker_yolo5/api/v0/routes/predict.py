@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException, File, UploadFile
 from core.api_models.common import Result
-from core.ml.retina import Model
+from core.api_models.yolov5_api import Model
 
 model = Model()
 model.load()

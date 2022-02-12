@@ -4,7 +4,7 @@ import queue
 from commons.lacmusDB.operation import image_processing
 from commons.config import ITEMS_IN_QUEUE_FOR_NEW_ML_WORKER, MAX_ML_WORKERS_COUNT
 import processing_thread
-import openstack_cmds
+import docker_ml_worker
 
 
 class Processing:
@@ -12,10 +12,12 @@ class Processing:
         # It could be the case, workers are there and running, but not in workers[]
         # due to application crush, so we need to pick up those one during startup (also it simplifies debug)
         self.avail_workers = queue.Queue()
-        for worker in openstack_cmds.try_to_find_exising_workers():
-            self.avail_workers.put(worker)
-        self.processing_threads = []
         self.image_queue = queue.Queue()
+        self.processing_threads = []
+        for worker in docker_ml_worker.try_to_find_existing_workers():
+            self.avail_workers.put(worker)
+            self.create_new_thread()
+
 
     def clean_empty_threads(self):
         new_threads = []

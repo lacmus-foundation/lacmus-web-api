@@ -9,6 +9,9 @@ define your password in ~/.bashrc
  	POSTGRES_PASSWORD
 
 define your hosts in lacmus-web-api/server_install/ansible_hosts (for single-server config you can keep default 127.0.0.1)
+Whole settings are not tested for the case of multiserver installation, but supposedly you'll have to publish relevant ports 
+instead of exposing those and define system variable POSTGRES_SERVER FTP_SERVER MINIO_SERVER. As orchestator runs docker 
+containers locally - workers yet should be build and available to start on the same host as orchestrator
 
 ```
 cd lacmus-web-api/server_install

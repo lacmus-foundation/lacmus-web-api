@@ -6,7 +6,7 @@
   - name: Ensures dir exists
     file: path=/etc/lacmus/DockerFiles/ftp state=directory
   - name: Ensure logs dir
-    file: path=/media/data/logs state=directory
+    file: path=/mnt/data-01/logs state=directory
   - name: Copy ftp api
     copy: 
       src : ../../ftp_api
@@ -30,19 +30,22 @@
       name: ftp
       image: vsftpd
       state: started
-      network_mode: host
+      networks:
+        - name: lacmus_server
+      networks_cli_compatible: yes
       published_ports:
-        - "0.0.0.0:21:21"
+        - "21:21"
+      exposed_ports:
         - "127.0.0.1:5001:5001"
       mounts:
         -
-          source: /media/data/logs
+          source: /mnt/data-01/logs
           target: /root/ftp_api/logs
           type: bind
       env:
         POSTGRES_PASSWORD: "{{ lookup('env','POSTGRES_PASSWORD') }}"
-        MINIO_ACCESS_KEY: "{{ lookup('env','MINIO_ACCESS_KEY') }}"
-        MINIO_SECRET_KEY: "{{ lookup('env','MINIO_SECRET_KEY') }}"
+        MINIO_ROOT_USER: "{{ lookup('env','MINIO_ROOT_USER') }}"
+        MINIO_ROOT_PASSWORD: "{{ lookup('env','MINIO_ROOT_PASSWORD') }}"
 
   handlers:
   - name: restart container
