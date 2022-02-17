@@ -17,3 +17,4 @@ CMD service vsftpd start && uvicorn server:app --host 0.0.0.0 --port 5001
 
 EXPOSE 21
 EXPOSE 5001
+EXPOSE 10100-10200

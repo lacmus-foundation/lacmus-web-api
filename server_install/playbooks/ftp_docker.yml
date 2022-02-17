@@ -35,6 +35,7 @@
       networks_cli_compatible: yes
       published_ports:
         - "21:21"
+        - "10100-10200:10100-10200"
       exposed_ports:
         - "127.0.0.1:5001:5001"
       mounts:
