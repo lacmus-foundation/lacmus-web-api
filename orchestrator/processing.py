@@ -34,14 +34,15 @@ class Processing:
             if (images is not None) and len(images) > 0:
                 for image in images:
                     self.image_queue.put(image)
+            if self.image_queue.qsize() > 0:
                 if len(self.processing_threads) == 0:
                     self.create_new_thread()
                 if len(self.processing_threads) < MAX_ML_WORKERS_COUNT \
                         and self.image_queue.qsize() > ITEMS_IN_QUEUE_FOR_NEW_ML_WORKER:
                     self.create_new_thread()
-            else:
-                time.sleep(10)
-                self.clean_empty_threads()
+            time.sleep(10)
+            self.clean_empty_threads()
+
 
     def create_new_thread(self):
         avail_worker = None

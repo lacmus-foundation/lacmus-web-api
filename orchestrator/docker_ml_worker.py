@@ -31,10 +31,17 @@ def create_ml_worker():
         while True:
             try:
                 try_attempts += 1
+                if try_attempts > config.KILL_WORKER_AFTER//2:
+                    logging.error("Still failed to get worker ping after %i tries. Try to kill it" % try_attempts)
+                    try:
+                        container.kill()
+                    except:
+                        logging.error("failed delete worker, it probably committed suicide ", exc_info=True)
+                    return None
                 container.reload()
                 ip = container.attrs['NetworkSettings']['Networks'][config.DOCKER_NETWORK]['IPAddress']
                 if ip is None or len(ip) == 0:
-                    logging.info("docker: ip not yet obtained")
+                    logging.info("docker: ip not yet obtained. Try=%i" % try_attempts)
                     time.sleep(2)
                     continue
                 logging.info("docker: Worker created. IP:%s" % ip)
@@ -44,7 +51,8 @@ def create_ml_worker():
                 logging.info("Got ok ping from server %s :)! " % ip)
                 return MLWorker(ip, container)
             except:
-                logging.info("Got exception during ping, seems worker is not up yet, wait 2 sec. Try=%i" % try_attempts)
+                logging.info("Got exception during ping, seems worker is not up yet, wait 2 sec. Try=%i" % try_attempts,
+                             exc_info=True)
                 time.sleep(2)
     except:
         logging.error("docker: failed create worker ", exc_info=True)

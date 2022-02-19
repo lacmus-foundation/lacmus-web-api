@@ -1,2 +1,2 @@
 # lacmus-web-api
-API to the lacmus project
+FTP API (server) to the lacmus project

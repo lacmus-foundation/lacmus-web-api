@@ -13,8 +13,13 @@ RUN apt-get update -qq \
     libsm6 \
     libxext6 \
     python3-pip \
+    ttf-mscorefonts-installer \
  && apt-get clean \
  && rm -rf /var/lib/apt/lists/*
+
+# avoid getting font from internet https://github.com/ultralytics/yolov5/issues/5159
+RUN wget https://ultralytics.com/assets/Arial.ttf && mkdir -p /root/.config/Ultralytics/ && mv Arial.ttf /root/.config/Ultralytics/Arial.ttf
+RUN fc-cache -f
 
 RUN mkdir -p /app/model/snapshotes
 WORKDIR /app
