@@ -42,7 +42,7 @@ seaborn
 six
 sniffio
 SQLAlchemy
-starlette==0.17.1
+starlette==0.25.0
 thop
 torch
 torchvision
